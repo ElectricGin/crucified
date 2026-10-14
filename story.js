@@ -471,10 +471,10 @@ window.STORY = {
      x and y are positions on the town map, in percent. */
   locations: [
     { id: "church",  name: "Church",          bg: "church",  x: 50, y: 30, people: ["rarris", "abutit"] },
-    { id: "inn",     name: "Parsonage",       bg: "house",     x: 20, y: 48, people: ["berity"] },
+    { id: "inn",     name: "Parsonage",       bg: "parsonage",     x: 20, y: 48, people: ["berity"] },
     { id: "farm",    name: "Pron Farm",       bg: "farm",    x: 82, y: 50, people: ["jroctor", "eliztor"] },
     { id: "square",  name: "Town Square",     bg: "square",  x: 45, y: 62, people: ["wibigail", "reversa"] },
-    { id: "nama",    name: "Nama House",      bg: "house",   x: 72, y: 30, people: ["pannama"] },
+    { id: "nama",    name: "Nama House",      bg: "nama",   x: 72, y: 30, people: ["pannama"] },
     { id: "cottage", name: "Doctor Cottage",  bg: "cottage", x: 14, y: 26, people: ["cebeca"] }
   ],
 
@@ -605,7 +605,7 @@ window.STORY = {
       { s: "detective", t: "I know what a demon looks like. I was seven years old. I saw one standing over my mother and father." },
       { s: "detective", t: "The doctors said I dreamed it. The doctors were wrong. I have hunted them ever since." },
       { note: "intro" },
-      { bg: "town_day", music: "day", show: [] },
+      { bg: "street", music: "day", show: [] },
       { s: "narrator", t: "Three days later you ride into town. A church, an inn, a forge, a few farms. And an old shack in the woods that nobody looks at." },
       { s: "narrator", t: "The shops close at three. People walk fast with their heads down. Nobody meets your eyes." },
       { evidence: "e_shops_3pm" },
@@ -676,7 +676,7 @@ window.STORY = {
     ],
 
     day2Intro: [
-      { bg: "town_day", music: "day", show: [] },
+      { bg: "street", music: "day", show: [] },
       { card: { title: "DAY TWO", quote: "name" } },
       { s: "narrator", t: "Overnight, someone painted a crude mark on Cebeca Doctor's door. Three families have locked their children inside." },
       { fx: "shadow" },
@@ -710,7 +710,7 @@ window.STORY = {
         { s: "narrator", t: "The crowd cheers. For the first time since you arrived, people smile at you in the street." }
       ],
       epilogue: [
-        { bg: "town_day", music: "night", show: [] },
+        { bg: "street", music: "night", show: [] },
         { s: "narrator", t: "The truth, which nobody asked for:" },
         { s: "narrator", t: "{truth}" },
       ],
@@ -754,7 +754,7 @@ window.STORY = {
       calmTitle: "ENDING: THE TRUTH OUTLIVES YOU",
       calmQuote: "life",
       calmCoda: [
-        { bg: "town_day", music: "night", show: [] },
+        { bg: "street", music: "night", show: [] },
         { s: "narrator", t: "You never leave the jail. But your journal does." },
         { s: "narrator", t: "Eliztor Pron reads it aloud in the square. Then Cebeca's ledger. Then Rarris's crumpled drafts." },
         { s: "narrator", t: "By winter, nobody will say the word 'demon' out loud. The court quietly stops meeting." },

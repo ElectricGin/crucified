@@ -60,7 +60,7 @@
   /* ---------------- optional art in assets/ ---------------- */
   const IMG = {};
   const BGS = ['town_day', 'town_night', 'title', 'memory', 'church', 'inn', 'farm', 'square', 'house', 'cottage',
-    'shack', 'clearing', 'study', 'barn', 'courtroom', 'jail'];
+    'shack', 'clearing', 'study', 'barn', 'courtroom', 'jail', 'street', 'parsonage', 'nama'];
   function loadImg(name) {
     return new Promise((res) => {
       const im = new Image();
@@ -169,6 +169,10 @@
   }
 
   const BG = {
+    // photo backgrounds (assets/bg_street.png etc.) fall back to these drawings if the file is missing
+    street: (t) => BG.square(t),
+    parsonage: (t) => BG.house(t),
+    nama: (t) => BG.house(t),
     town_day: (t) => drawMap(false, t),
     town_night: (t) => drawMap(true, t),
     title: (t) => { drawMap(true, t); R(0, 0, W, H, 'rgba(6,4,12,0.35)'); },
