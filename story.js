@@ -470,12 +470,12 @@ window.STORY = {
   /* ---------------- MAP ----------------------------------------------------
      x and y are positions on the town map, in percent. */
   locations: [
-    { id: "church",  name: "Church",          bg: "church",  x: 50, y: 30, people: ["rarris", "abutit"] },
-    { id: "inn",     name: "Parsonage",       bg: "parsonage",     x: 20, y: 48, people: ["berity"] },
-    { id: "farm",    name: "Pron Farm",       bg: "farm",    x: 82, y: 50, people: ["jroctor", "eliztor"] },
-    { id: "square",  name: "Town Square",     bg: "square",  x: 45, y: 62, people: ["wibigail", "reversa"] },
-    { id: "nama",    name: "Nama House",      bg: "nama",   x: 72, y: 30, people: ["pannama"] },
-    { id: "cottage", name: "Doctor Cottage",  bg: "cottage", x: 14, y: 26, people: ["cebeca"] }
+    { id: "church",  name: "Church",          bg: "church",  x: 50, y: 36, people: ["rarris", "abutit"] },
+    { id: "inn",     name: "Parsonage",       bg: "parsonage",     x: 20, y: 54, people: ["berity"] },
+    { id: "farm",    name: "Pron Farm",       bg: "farm",    x: 84, y: 57, people: ["jroctor", "eliztor"] },
+    { id: "square",  name: "Town Square",     bg: "square",  x: 44, y: 79, people: ["wibigail", "reversa"] },
+    { id: "nama",    name: "Nama House",      bg: "nama",   x: 72, y: 36, people: ["pannama"] },
+    { id: "cottage", name: "Doctor Cottage",  bg: "cottage", x: 13, y: 31, people: ["cebeca"] }
   ],
 
   /* ---------------- EVIDENCE ----------------------------------------------
