@@ -1,6 +1,6 @@
 # Crucified
 
-Play online: https://claude.ai/artifact/CRia1VKrmP1VNpUMKGoLCE
+Play online: **https://electricgin.github.io/crucified/** (GitHub Pages, updates automatically about a minute after every push to `main`)
 
 A pixel-art horror detective visual novel for our AP Lang *Crucible* project. You play a priest-detective sent to find a "demon" in a small town. There is no demon. One playthrough takes about 15 minutes.
 
