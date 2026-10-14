@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Crucified</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+  <div id="stage">
+    <canvas id="scene" width="320" height="180" aria-label="Game scene"></canvas>
+
+    <div id="hud" hidden>
+      <div class="hud-left"><span id="hud-day"></span><span id="hud-hours"></span></div>
+      <div class="hud-right">
+        <div id="meter" role="meter" aria-label="Town hysteria" aria-valuemin="0" aria-valuemax="100" aria-valuenow="10">
+          <span class="meter-label">Hysteria</span>
+          <div class="meter-bar"><div id="meter-fill"></div><div id="meter-floor" title="The meter can't drop below this line"></div></div>
+          <span id="meter-pct">10%</span>
+        </div>
+        <button type="button" class="btn small" id="btn-journal">Journal</button>
+        <button type="button" class="btn small" id="btn-sound">Sound: on</button>
+      </div>
+    </div>
+
+    <div id="note" hidden><b>Presenter note</b><span id="note-text"></span><button type="button" id="note-close" aria-label="Hide note">&times;</button></div>
+    <div id="toasts" aria-live="polite"></div>
+
+    <div id="dialog" hidden>
+      <div id="speaker"></div>
+      <div id="text"></div>
+      <div id="cite" hidden></div>
+      <div id="more" hidden>&#9660;</div>
+    </div>
+
+    <div id="choices" hidden></div>
+    <div id="map" hidden></div>
+    <div id="eff" hidden></div>
+
+    <div class="overlay" id="charcard" hidden></div>
+    <div class="overlay" id="card" hidden></div>
+    <div class="overlay" id="journal" hidden></div>
+    <div class="overlay" id="meeting" hidden></div>
+    <div class="overlay" id="end" hidden></div>
+    <div class="overlay" id="title" hidden></div>
+  </div>
+</div>
+<script src="story.js"></script>
+<script src="engine.js"></script>
+</body>
+</html>
