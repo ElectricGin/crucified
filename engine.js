@@ -26,7 +26,7 @@
   function load(k) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : null; } catch (e) { return null; } }
   function store(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* ignore */ } }
   function wipe(k) { try { localStorage.removeItem(k); } catch (e) { /* ignore */ } }
-  const prefs = Object.assign({ presenter: false, muted: false }, load(PREF_KEY) || {});
+  const prefs = Object.assign({ muted: false }, load(PREF_KEY) || {});
   function savePrefs() { store(PREF_KEY, prefs); }
 
   let state = null;
@@ -643,13 +643,8 @@
     setTimeout(() => t.remove(), 3500);
   }
 
-  function note(key) {
-    if (!prefs.presenter) return;
-    const txt = S.presenter[key];
-    if (!txt) return;
-    $('note-text').textContent = txt;
-    $('note').hidden = false;
-  }
+  // Presenter notes were removed (they gave the game away); calls are kept as no-ops.
+  function note() {}
 
   /* ---------------- game state changes ---------------- */
   function updateHUD() {
@@ -1055,20 +1050,18 @@
   function showTitle() {
     Music.set(null);
     view.bg = 'title'; view.show = []; view.speaking = null;
-    ['hud', 'dialog', 'choices', 'map', 'note', 'eff', 'meeting', 'journal', 'charcard', 'card', 'end'].forEach((x) => { $(x).hidden = true; });
+    ['hud', 'dialog', 'choices', 'map', 'eff', 'meeting', 'journal', 'charcard', 'card', 'end'].forEach((x) => { $(x).hidden = true; });
     const saved = load(SAVE_KEY);
     const t = $('title');
     t.innerHTML = '<div class="title-inner"><h1>' + esc(S.title) + '</h1><p class="subtitle">' + esc(S.subtitle) + '</p>' +
       '<div class="title-menu">' +
       '<button type="button" class="btn primary" id="t-new">New game</button>' +
       (saved && saved.phase && saved.phase !== 'end' ? '<button type="button" class="btn" id="t-cont">Continue</button>' : '') +
-      '<button type="button" class="btn" id="t-pres" aria-pressed="' + prefs.presenter + '">Presenter mode: ' + (prefs.presenter ? 'ON' : 'OFF') + '</button>' +
       '<button type="button" class="btn" id="t-sound" aria-pressed="' + !prefs.muted + '">Sound: ' + (prefs.muted ? 'OFF' : 'ON') + '</button>' +
       '</div><p class="hint">About 15 minutes. Click or Space to advance, number keys to choose, J for journal.</p></div>';
     t.hidden = false;
     $('t-new').onclick = (e) => { e.stopPropagation(); newGame(); };
     if ($('t-cont')) $('t-cont').onclick = (e) => { e.stopPropagation(); continueGame(saved); };
-    $('t-pres').onclick = (e) => { e.stopPropagation(); prefs.presenter = !prefs.presenter; savePrefs(); showTitle(); };
     $('t-sound').onclick = (e) => { e.stopPropagation(); toggleSound(); showTitle(); };
     $('t-new').focus({ preventScroll: true });
   }
@@ -1077,7 +1070,6 @@
     Music.unlock();
     $('title').hidden = true;
     $('hud').hidden = false;
-    $('note').hidden = true;
     updateHUD();
   }
   function newGame() {
@@ -1105,7 +1097,7 @@
 
   /* ---------------- input + layout ---------------- */
   stage.addEventListener('click', (e) => {
-    if (e.target.closest('button, .overlay, #choices, #map, #note')) return;
+    if (e.target.closest('button, .overlay, #choices, #map')) return;
     if (advance) advance();
   });
   document.addEventListener('keydown', (e) => {
@@ -1123,7 +1115,6 @@
   });
   $('btn-journal').addEventListener('click', (e) => { e.stopPropagation(); if (!journalClose) openJournal(); });
   $('btn-sound').addEventListener('click', (e) => { e.stopPropagation(); Music.unlock(); toggleSound(); });
-  $('note-close').addEventListener('click', (e) => { e.stopPropagation(); $('note').hidden = true; });
 
   function fit() {
     const pad = window.innerWidth < 700 ? 32 : 0;

@@ -777,19 +777,6 @@ window.STORY = {
     }
   },
 
-  /* ---------------- PRESENTER MODE NOTES ----------------------------------
-     Shown on screen when Presenter Mode is on. Use these for the presentation. */
-  presenter: {
-    intro: "BACKSTORY: the detective WANTS demons to be real. Like Salem's judges, he arrives already certain. (Theme: judgment)",
-    map: "TIME LIMIT: every question costs an hour. Pressure pushes the player to judge fast, like Salem's courts did. (Themes: fear, judgment)",
-    approach: "MESSAGE TYPES = rhetorical approaches. Intimidation is labeled 'SUPER effective' but produces false confessions, like Tituba in Act 1. (Themes: fear, accusation)",
-    journal: "FACT vs TESTIMONY vs INFERENCE: the player has to judge how credible each source is, which Salem's court refused to do with spectral evidence.",
-    meeting: "HYSTERIA METER: every conversation moves it. Gentle questions calm the town, coerced confessions spread rumors. Its floor keeps rising, so it always hits 100%, but how much calm vs. fear you spread changes the ending. (Theme: hysteria)",
-    night: "HALLUCINATIONS: the hunter sees horns because he expects them. He brings the demon with him. (Themes: paranoia, spectral evidence)",
-    trial: "THE TRIAL: echoes Danforth. There is no neutral option, and the meter is now 100% no matter what you did. (Themes: judgment, hysteria)",
-    ending: "EVERY ENDING punishes someone innocent. The game's argument: accusation spreads because the system rewards certainty, not truth."
-  },
-
   // Shown on the ending screen ("How the game argues")
   rhetoric: [
     ["Limited hours per day", "Time pressure forces snap judgments, like the rushed Salem trials. (fear, judgment)"],

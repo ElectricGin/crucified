@@ -11,7 +11,6 @@ A pixel-art horror detective visual novel for our AP Lang *Crucible* project. Yo
 - **Hysteria meter:** every conversation moves it. Effective kind questions calm the town (−2), forced confessions spread rumors (+5), and shocking evidence adds +3. At each town meeting you choose up to 2 pieces of evidence to tell the town: calm facts slow the meter and shocking claims spike it. Town events pop up at 40/60/80%. Its floor keeps rising, so it always reaches 100% by the trial. That's the point. How much calm vs. fear you spread changes the ending.
 - Strangers stay unknown until you spend an hour asking them a question. Each character card has a "Town gossip" hint about which approach works on them.
 - In the journal, connect two clues to make an inference.
-- **Presenter mode** on the title screen shows notes explaining which theme each mechanic represents. Use it during the presentation.
 
 ## Changing the story (no coding needed)
 Everything the game says is in **`story.js`**. Open it in any text editor (Notepad, VS Code, or the Chromebook Text app).
