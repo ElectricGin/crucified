@@ -25,7 +25,15 @@ window.STORY = {
     maxReportsPerMeeting: 2, // evidence you can report at each town meeting
     // The hysteria meter can never drop below these floors. It always reaches 100.
     floors: { day1: 10, meeting1: 30, night: 40, day2: 55, meeting2: 75, trial: 100 },
-    textSpeed: 22            // milliseconds per letter
+    textSpeed: 22,           // milliseconds per letter
+    // How interviews move the meter (rumors spread from every conversation)
+    interviewHyst: { false: 5, shocking: 3, gentle: -2 },
+    // Toasts when the meter crosses these lines
+    thresholds: [
+      [40, "Doors are being bolted across town."],
+      [60, "Someone painted a mark on Cebeca Doctor's door."],
+      [80, "Men are building a gallows in the square."]
+    ]
   },
 
   /* ---------------- CRUCIBLE QUOTES (check each against your copy) -------- */
@@ -80,7 +88,8 @@ window.STORY = {
       card: {
         personality: "The town minister. Proud, nervous, always counting who respects him.",
         motive: "Protect his pulpit and his reputation, whatever it costs.",
-        relationships: "Uncle of Wibigail. Master of Abutit. Paid mostly by Pan Nama's family."
+        relationships: "Uncle of Wibigail. Master of Abutit. Paid mostly by Pan Nama's family.",
+        approach: "Proud. He warms up to anyone who shows him respect, and bristles when questioned bluntly."
       },
       greeting: "Father. Have you found it yet? The town grows impatient. So do I.",
       topics: {
@@ -121,7 +130,8 @@ window.STORY = {
       card: {
         personality: "Sharp, charming, and furious underneath. Knows exactly what adults want to hear.",
         motive: "Revenge on Eliztor Pron, who threw her out of service. She wants Eliztor's place.",
-        relationships: "Niece of Rarris. Leader of the girls. HATES Pan Nama, and Pan Nama hates her."
+        relationships: "Niece of Rarris. Leader of the girls. HATES Pan Nama, and Pan Nama hates her.",
+        approach: "She performs fear for sympathy. Gentleness plays into her act; plain questions cut through it."
       },
       greeting: "Oh! Father. You frightened me. Everything frightens me now.",
       topics: {
@@ -162,7 +172,8 @@ window.STORY = {
       card: {
         personality: "A blunt farmer who hates hypocrites, including the one in his mirror.",
         motive: "Hide a past sin. He knows the accusations are lies, but saying how would shame him.",
-        relationships: "Husband of Eliztor. Once had an affair with Wibigail."
+        relationships: "Husband of Eliztor. Once had an affair with Wibigail.",
+        approach: "Hates flattery and hates threats more. Talk to him straight."
       },
       greeting: "Another man of God come to save us. Say what you came to say. I have fields to work.",
       topics: {
@@ -205,7 +216,8 @@ window.STORY = {
       card: {
         personality: "Honest, cold, careful with every word. She has never told a lie.",
         motive: "Keep her family together, even if it means judging her husband in silence.",
-        relationships: "Wife of Jroctor. Dismissed Wibigail from service."
+        relationships: "Wife of Jroctor. Dismissed Wibigail from service.",
+        approach: "Honest when treated gently. Frighten her and she will protect her husband at any cost."
       },
       greeting: "Good day, Father. Wipe your boots, please.",
       topics: {
@@ -245,7 +257,8 @@ window.STORY = {
       card: {
         personality: "Quiet and watchful. The only person in town who wasn't born here.",
         motive: "Survive. She knows who gets blamed first in a frightened town.",
-        relationships: "Servant in Rarris's house. The girls came to her for charms."
+        relationships: "Servant in Rarris's house. The girls came to her for charms.",
+        approach: "Terrified. Kindness gets the truth. Threats get whatever she thinks you want to hear."
       },
       greeting: "...Yes, Father? I have done nothing. I only clean the Parvend's house.",
       topics: {
@@ -285,7 +298,8 @@ window.STORY = {
       card: {
         personality: "Rich, grieving, and bitter. Her family pays most of the minister's salary.",
         motive: "Someone must be blamed for her dead children. Cebeca Doctor's land would be a bonus.",
-        relationships: "Long feud with Cebeca Doctor over land. HATES Wibigail, and Wibigail hates her."
+        relationships: "Long feud with Cebeca Doctor over land. HATES Wibigail, and Wibigail hates her.",
+        approach: "Grieving and proud. Sympathy reaches her; pushing makes her dig in."
       },
       greeting: "So you're the demon hunter. You look younger than I expected. And poorer.",
       topics: {
@@ -325,7 +339,8 @@ window.STORY = {
       card: {
         personality: "Seventy-two years old, gentle, and unafraid. Everyone calls her a saint, until now.",
         motive: "None. She has nothing to hide except a garden.",
-        relationships: "Pan Nama has wanted her land for twenty years."
+        relationships: "Pan Nama has wanted her land for twenty years.",
+        approach: "Calm and unafraid. Any respectful question works. Threats change nothing."
       },
       greeting: "Come in out of the wind, Father. Sit. You look like you haven't slept.",
       topics: {
@@ -367,7 +382,8 @@ window.STORY = {
       card: {
         personality: "Rarris's ten-year-old daughter. She 'fell sick' after the dancing and won't leave her room, but she watches everything from her window.",
         motive: "Stay 'sick' so nobody asks what she did in the woods. She's sure everyone is talking about her.",
-        relationships: "Daughter of Rarris, cousin of Wibigail. She was at the fire."
+        relationships: "Daughter of Rarris, cousin of Wibigail. She was at the fire.",
+        approach: "Paranoid. Kindness makes her suspicious, but a plain, direct question calms her."
       },
       greeting: "Who told you I was awake? ...Don't tell Father. Sit there, where I can see you.",
       topics: {
@@ -407,7 +423,8 @@ window.STORY = {
       card: {
         personality: "Sixteen, jumpy, desperate to belong. Screams first, thinks later.",
         motive: "Stay on Wibigail's good side. Being one of the 'afflicted' is safer than being accused.",
-        relationships: "One of the girls who danced in the woods. Terrified of Wibigail."
+        relationships: "One of the girls who danced in the woods. Terrified of Wibigail.",
+        approach: "Panics easily. Pressure sets off a fit. A gentle voice might get the real story."
       },
       greeting: "Is she watching? Wibigail? ...Okay. Okay. Hi.",
       topics: {
@@ -696,7 +713,16 @@ window.STORY = {
         { bg: "town_day", music: "night", show: [] },
         { s: "narrator", t: "The truth, which nobody asked for:" },
         { s: "narrator", t: "{truth}" },
-        { s: "narrator", t: "A week later, Wibigail faints in church. When she wakes up, she points at someone new." }
+      ],
+      // You spread more fear than calm
+      fearCoda: [
+        { s: "narrator", t: "A week later, Wibigail faints in church. When she wakes up, she points at someone new." },
+        { s: "narrator", t: "Everything you frightened out of people is still being repeated. Louder." }
+      ],
+      // You spread more calm than fear
+      calmCoda: [
+        { s: "narrator", t: "But a few families stay home from the hanging. They keep repeating the calm things you said at the meetings." },
+        { s: "narrator", t: "It wasn't enough to save {name}. It might be enough to save the next one." }
       ],
       quote: "life"
     },
@@ -723,7 +749,17 @@ window.STORY = {
         { s: "narrator", t: "The constables drag you to the jail. The charge sheet has one word on it: EVERYTHING." },
         { s: "detective", t: "Worth it." }
       ],
-      quote: "accuser"
+      quote: "accuser",
+      // Unlocked by: 3+ connections AND spreading more calm than fear
+      calmTitle: "ENDING: THE TRUTH OUTLIVES YOU",
+      calmQuote: "life",
+      calmCoda: [
+        { bg: "town_day", music: "night", show: [] },
+        { s: "narrator", t: "You never leave the jail. But your journal does." },
+        { s: "narrator", t: "Eliztor Pron reads it aloud in the square. Then Cebeca's ledger. Then Rarris's crumpled drafts." },
+        { s: "narrator", t: "By winter, nobody will say the word 'demon' out loud. The court quietly stops meeting." },
+        { s: "narrator", t: "They hanged nobody else. They never let you out, either." }
+      ]
     },
 
     // Extra lines if the accused is Jroctor or Eliztor
@@ -748,7 +784,7 @@ window.STORY = {
     map: "TIME LIMIT: every question costs an hour. Pressure pushes the player to judge fast, like Salem's courts did. (Themes: fear, judgment)",
     approach: "MESSAGE TYPES = rhetorical approaches. Intimidation is labeled 'SUPER effective' but produces false confessions, like Tituba in Act 1. (Themes: fear, accusation)",
     journal: "FACT vs TESTIMONY vs INFERENCE: the player has to judge how credible each source is, which Salem's court refused to do with spectral evidence.",
-    meeting: "HYSTERIA METER: calm facts slow it and shocking claims spike it, but its floor keeps rising. Hysteria is a system, not one person's fault. (Theme: hysteria)",
+    meeting: "HYSTERIA METER: every conversation moves it. Gentle questions calm the town, coerced confessions spread rumors. Its floor keeps rising, so it always hits 100%, but how much calm vs. fear you spread changes the ending. (Theme: hysteria)",
     night: "HALLUCINATIONS: the hunter sees horns because he expects them. He brings the demon with him. (Themes: paranoia, spectral evidence)",
     trial: "THE TRIAL: echoes Danforth. There is no neutral option, and the meter is now 100% no matter what you did. (Themes: judgment, hysteria)",
     ending: "EVERY ENDING punishes someone innocent. The game's argument: accusation spreads because the system rewards certainty, not truth."
@@ -759,10 +795,11 @@ window.STORY = {
     ["Limited hours per day", "Time pressure forces snap judgments, like the rushed Salem trials. (fear, judgment)"],
     ["Kind / Direct / Intimidate type chart", "Rhetorical approach changes what people say. Intimidation is 'super effective' but every result is false, like coerced confessions. (fear, accusation)"],
     ["Fact / Testimony / Inference journal", "The player must weigh source credibility, the thing Salem's court ignored with spectral evidence. (judgment)"],
-    ["Hysteria meter with a rising floor", "You can slow hysteria but never stop it. It always hits 100%. (hysteria)"],
+    ["Hysteria meter with a rising floor", "Every interview and report moves it. You can slow hysteria but never stop it. It always hits 100%, but spreading calm instead of fear changes how the story ends. (hysteria)"],
     ["Town meetings", "Even true evidence gets twisted when the crowd hears it ('BLOOD?'). (paranoia, hysteria)"],
     ["The detective's hallucinations", "The hunter sees what he expects, so his own eyes become false evidence. (paranoia, spectral evidence)"],
     ["Characters built on themes", "Wibigail = resentment and accusation, Pan Nama = grudges, Jroctor = shame, Abutit = fear, Rarris = judgment. Wibigail and Pan Nama hate each other."],
     ["Endings", "Accusing anyone condemns an innocent. Refusing gets YOU condemned. There is no road between."]
   ]
 };
+

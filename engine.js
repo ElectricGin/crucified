@@ -34,13 +34,15 @@
     return {
       phase: 'intro', day: 1, hours: SET.hoursPerDay,
       hyst: SET.floors.day1, floor: SET.floors.day1,
-      evidence: [], reported: [], asked: {}, chart: {}, met: {}, notified: {}
+      evidence: [], reported: [], asked: {}, chart: {}, met: {}, notified: {},
+      calm: 0, fear: 0, crossed: {}
     };
   }
   function save() { if (state) store(SAVE_KEY, state); }
 
   /* ---------------- helpers ---------------- */
   const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const cap = (t) => String(t).replace(/\b\w/g, (c) => c.toUpperCase());
   const fill = (t, vars) => String(t).replace(/\{(\w+)\}/g, (m, k) => (vars && vars[k] != null ? vars[k] : m));
   const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   function getEv(id) {
@@ -316,6 +318,9 @@
   }
   function person(cx, L, mood, id) {
     const top = 62, dark = shade(L.robe, -0.4);
+    ctx.fillStyle = 'rgba(0,0,0,0.35)'; ctx.fillRect(cx - 26, H - 4, 52, 4);
+    R(cx - 10, top - 1, 20, 20, '#0a0808');
+    for (let r = 0; r <= H - (top + 20); r++) { const w = Math.round(24 + r * 0.32) + 2; R(cx - w / 2, top + 20 + r, w, 1, '#0a0808'); }
     for (let r = 0; r <= H - (top + 20); r++) {
       const w = Math.round(24 + r * 0.32);
       R(cx - w / 2, top + 20 + r, w, 1, L.robe); R(cx + w / 2 - 3, top + 20 + r, 3, 1, dark);
@@ -371,6 +376,23 @@
       const dim = view.speaking && view.speaking !== 'narrator' && view.speaking !== id;
       drawChar(id, xs[i] || 160, view.moods[id] || 'neutral', dim);
     });
+
+    // atmosphere: drifting dust/embers + vignette
+    const night = /night|clearing|shack|memory|study|barn|title/.test(view.bg);
+    for (let i = 0; i < 18; i++) {
+      const px = (i * 53 + t * (0.006 + (i % 3) * 0.004)) % W;
+      const py = (i * 37 + Math.sin(t / 900 + i) * 6 + (night ? 0 : t * 0.003)) % H;
+      R(px, py, 1, 1, night ? 'rgba(255,90,60,0.35)' : 'rgba(255,240,200,0.25)');
+    }
+    for (let i = 0; i < 6; i++) {
+      const a = 0.05 + i * 0.025;
+      ctx.fillStyle = 'rgba(0,0,0,' + a + ')';
+      ctx.fillRect(0, i * 2, W, 2); ctx.fillRect(0, H - (i + 1) * 2, W, 2);
+      ctx.fillRect(i * 3, 0, 3, H); ctx.fillRect(W - (i + 1) * 3, 0, 3, H);
+    }
+    if (state && state.hyst >= 70 && !/title|memory/.test(view.bg)) {
+      R(0, 0, W, H, 'rgba(120,0,10,' + (0.04 + 0.03 * Math.sin(t / 400)).toFixed(3) + ')');
+    }
 
     if (view.bg === 'jail') {
       for (let x = 8; x < W; x += 24) R(x, 0, 4, H, '#141418');
@@ -575,7 +597,8 @@
         '<div class="chips">' + ch.themes.map((t) => '<span class="chip">' + esc(t) + '</span>').join('') + '</div>' +
         '<dl><dt>Personality</dt><dd>' + esc(ch.card.personality) + '</dd>' +
         '<dt>Motive</dt><dd>' + esc(ch.card.motive) + '</dd>' +
-        '<dt>Relationships</dt><dd>' + esc(ch.card.relationships) + '</dd></dl>' +
+        '<dt>Relationships</dt><dd>' + esc(ch.card.relationships) + '</dd>' +
+        (ch.card.approach ? '<dt>Town gossip</dt><dd>' + esc(ch.card.approach) + '</dd>' : '') + '</dl>' +
         '<button type="button" class="btn primary" id="cc-go">Talk to ' + esc(ch.name.split(' ')[0]) + '</button></div>';
       $('dialog').hidden = true;
       el.hidden = false;
@@ -630,9 +653,20 @@
     $('btn-journal').classList.toggle('pulse', avail > 0);
     $('btn-journal').textContent = avail > 0 ? 'Journal (' + avail + ' new)' : 'Journal';
   }
-  function setHyst(v) {
+  function setHyst(v, quiet) {
     const before = state.hyst;
+    const want = Math.round(v) - before;
+    if (!quiet && want > 0) state.fear += want;
+    if (!quiet && want < 0) state.calm += -want;
     state.hyst = Math.max(state.floor, Math.min(100, Math.round(v)));
+    if (!quiet && want !== 0) {
+      const applied = state.hyst - before;
+      toast('<span class="tag ' + (want > 0 ? 't-testimony shocking' : 't-fact') + '">HYSTERIA ' + (want > 0 ? '+' : '') + want + '%</span> ' +
+        (want < 0 && applied === 0 ? 'You calmed some people, but the panic has a floor.' : (want > 0 ? 'Rumors spread.' : 'A few people breathe easier.')));
+    }
+    (SET.thresholds || []).forEach(([lvl, msg]) => {
+      if (state.hyst >= lvl && !state.crossed[lvl]) { state.crossed[lvl] = true; toast('<span class="tag shocking">TOWN</span> ' + esc(msg)); }
+    });
     if (state.hyst !== before) {
       const m = $('meter');
       m.classList.remove('up', 'down');
@@ -641,7 +675,7 @@
     }
     updateHUD();
   }
-  function raiseFloor(f) { state.floor = Math.max(state.floor, f); setHyst(state.hyst); }
+  function raiseFloor(f) { state.floor = Math.max(state.floor, f); setHyst(state.hyst, true); }
 
   function availableConnections() {
     if (!state) return [];
@@ -677,7 +711,7 @@
       if (st.fx) await runFx(st.fx);
       if (st.evidence) addEvidence(st.evidence);
       if (st.hyst != null) setHyst(state.hyst + st.hyst);
-      if (st.hystTo != null) { raiseFloor(st.hystTo); setHyst(st.hystTo); }
+      if (st.hystTo != null) { raiseFloor(st.hystTo); setHyst(st.hystTo, true); }
       if (st.note) note(st.note);
       if (st.card) await card(st.card);
       if (st.t) await say(st.s || 'narrator', fill(st.t, vars), st.mood, st.quote);
@@ -723,7 +757,7 @@
             const ch = S.characters[id], chart = state.chart[id] || {};
             return '<div class="person"><h3>' + esc(ch.name) + ' <span class="based">' + esc(ch.basedOn) + '</span></h3>' +
               '<div class="chips">' + ch.themes.map((t) => '<span class="chip">' + esc(t) + '</span>').join('') + '</div>' +
-              '<p>' + esc(ch.card.motive) + '</p><div class="typechart">' +
+              '<p>' + esc(ch.card.motive) + '</p>' + (ch.card.approach ? '<p><i>Gossip: ' + esc(ch.card.approach) + '</i></p>' : '') + '<div class="typechart">' +
               APPROACHES.map((a) => '<span class="tc ' + (chart[a] ? 'eff-' + chart[a] : '') + '">' + S.approaches[a].label + ': ' +
                 (chart[a] ? chart[a].replace('false', 'super?') : '?') + '</span>').join('') + '</div></div>';
           }).join('') : '<p class="empty">You haven’t met anyone yet.</p>';
@@ -820,8 +854,8 @@
   async function interview(id) {
     const ch = S.characters[id];
     view.show = [id]; view.moods = {}; view.speaking = null;
-    if (!state.met[id]) { state.met[id] = true; await charCard(id); }
-    await say(id, ch.greeting, 'neutral');
+    if (state.met[id]) await say(id, ch.greeting, 'neutral');
+    else await say('narrator', 'A stranger watches you, saying nothing. Ask a question (1 hour) to find out who they are.');
     while (state.hours > 0) {
       const left = topicsLeft(id);
       if (!left.length) { await say('narrator', ch.name + ' has nothing more to tell you.'); break; }
@@ -844,6 +878,7 @@
       state.hours -= 1;
       state.asked[id + ':' + topic] = a;
       updateHUD();
+      if (!state.met[id]) { state.met[id] = true; save(); await charCard(id); await say(id, ch.greeting, 'neutral'); }
       await say('detective', resp.ask || S.topics[topic].ask[a]);
       for (let i = 0; i < resp.lines.length; i++) {
         const last = i === resp.lines.length - 1;
@@ -852,6 +887,12 @@
       state.chart[id] = Object.assign({}, state.chart[id], { [a]: resp.eff });
       await effBanner(resp.eff);
       (resp.evidence || []).forEach(addEvidence);
+      const IH = SET.interviewHyst || {};
+      let dh = 0;
+      if (resp.eff === 'false') dh += IH.false || 0;
+      if ((resp.evidence || []).some((e) => getEv(e).shocking)) dh += IH.shocking || 0;
+      if (a === 'kind' && resp.eff === 'effective') dh += IH.gentle || 0;
+      if (dh) setHyst(state.hyst + dh);
       save();
     }
   }
@@ -928,7 +969,7 @@
     await run(S.scenes.trialIntro);
     for (;;) {
       view.show = ['fanforth']; view.speaking = null;
-      const opts = SUSPECTS.map((id) => ({ label: S.characters[id].name, sub: state.met[id] ? S.characters[id].themes.join(', ') : 'You never spoke to them' }));
+      const opts = SUSPECTS.map((id) => ({ label: S.characters[id].name, sub: state.met[id] ? S.characters[id].themes.map(cap).join(', ') : 'You never spoke to them' }));
       opts.push({ label: 'Check your journal first', sub: 'Look over what you know' });
       opts.push({ label: 'There is no demon.', sub: 'Refuse to name anyone', cls: 'special' });
       const i = await choose(opts, true);
@@ -952,6 +993,8 @@
     const extra = S.scenes.accuseExtras[id];
     if (extra) await run(extra, vars);
     await run(E.epilogue, vars);
+    if (state.calm >= state.fear && E.calmCoda) await run(E.calmCoda, vars);
+    else if (E.fearCoda) await run(E.fearCoda, vars);
     note('ending');
     await card({ title: E.title, quote: E.quote });
     endScreen(E.title, ch.name);
@@ -966,8 +1009,11 @@
       await say('fanforth', S.scenes.truthSpeech.reply);
     }
     await run(E.steps);
-    await card({ title: E.title, quote: E.quote });
-    endScreen(E.title, null);
+    const calmWin = state.calm >= state.fear && made.length >= 3 && E.calmCoda;
+    if (calmWin) await run(E.calmCoda);
+    const title = calmWin ? E.calmTitle : E.title;
+    await card({ title: title, quote: calmWin ? E.calmQuote : E.quote });
+    endScreen(title, null);
   }
 
   function endScreen(title, accused) {
@@ -980,6 +1026,7 @@
     el.innerHTML = '<div class="panel end-panel"><p class="eyebrow">' + (accused ? 'You named ' + esc(accused) : 'You named no one') + '</p>' +
       '<h2>' + esc(title) + '</h2>' +
       '<div class="stats"><div><b>100%</b><span>final hysteria</span></div>' +
+      '<div><b>' + state.calm + ' / ' + state.fear + '</b><span>calm you spread / fear you spread</span></div>' +
       '<div><b>' + state.evidence.length + '</b><span>pieces of evidence</span></div>' +
       '<div><b>' + nInf + '/' + Object.keys(S.inferences).length + '</b><span>connections made</span></div>' +
       '<div><b>' + intimidated + '</b><span>people intimidated</span></div></div>' +
@@ -1082,3 +1129,4 @@
   requestAnimationFrame(render);
   preload().then(showTitle);
 })();
+

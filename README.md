@@ -1,12 +1,15 @@
 # Crucified
 
+Play online: https://claude.ai/artifact/CRia1VKrmP1VNpUMKGoLCE
+
 A pixel-art horror detective visual novel for our AP Lang *Crucible* project. You play a priest-detective sent to find a "demon" in a small town. There is no demon. One playthrough takes about 15 minutes.
 
 ## How to play
 - Open `index.html` in Chrome by double-clicking it. You don't need to install anything, and it works on Chromebooks.
 - Click or press **Space** to advance text, press **1-9** to pick choices, and press **J** to open the journal.
 - Each question costs 1 hour, and you get 6 hours a day for 2 days. Every question can be asked **Kind**, **Direct**, or **Intimidate**, and each character reacts differently, like a Pokémon type chart.
-- At each town meeting, choose up to 2 pieces of evidence to tell the town. Calm facts slow the hysteria meter, and shocking claims spike it. The meter always reaches 100% in the end, and that's the point.
+- **Hysteria meter:** every conversation moves it. Effective kind questions calm the town (−2), forced confessions spread rumors (+5), and shocking evidence adds +3. At each town meeting you choose up to 2 pieces of evidence to tell the town: calm facts slow the meter and shocking claims spike it. Town events pop up at 40/60/80%. Its floor keeps rising, so it always reaches 100% by the trial. That's the point. How much calm vs. fear you spread changes the ending.
+- Strangers stay unknown until you spend an hour asking them a question. Each character card has a "Town gossip" hint about which approach works on them.
 - In the journal, connect two clues to make an inference.
 - **Presenter mode** on the title screen shows notes explaining which theme each mechanic represents. Use it during the presentation.
 
@@ -51,3 +54,19 @@ Drop MP3 files into `assets/` with these names and they replace the built-in syn
 | `engine.js` | Game logic and the placeholder pixel art (you usually don't need to touch it) |
 | `style.css` | Colors, fonts, and layout |
 | `assets/` | Our art and music (optional) |
+
+## Endings
+- **Accuse anyone:** they're condemned, then the game reveals they were innocent. The epilogue changes depending on whether you spread more calm or more fear.
+- **"There is no demon":** the town turns on you and you're jailed (the folder-toss ending).
+- **"The Truth Outlives You":** say there is no demon after making 3+ connections and spreading more calm than fear.
+
+## Group docs
+- `docs/presentation-script.md`: 4-speaker presentation script (5–7 min) + likely Q&A
+- `docs/dialogue-for-rewrite.md`: every line in the game with its id, for rewriting in our own words
+
+## Uploading to itch.io
+Zip `index.html`, `style.css`, `story.js`, `engine.js`, and `assets/` (with `index.html` at the top level of the zip). On itch.io, create a new project, set the kind to **HTML**, upload the zip, check "This file will be played in the browser," set the size to 960×540, and publish.
+
+## Version history
+- **v1 (Oct 4):** first full build
+- **v2 (Oct 9):** playtest fixes: capitalized themes, approach hints, fixed the free-reveal loophole, hysteria meter reacts to everything + branching endings, graphics polish

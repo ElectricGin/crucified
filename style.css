@@ -177,7 +177,7 @@ button:focus-visible { outline: 2px solid var(--candle); outline-offset: 2px; }
 .cc { width: min(92%, 26em); }
 .based { color: var(--dim); margin: -0.4em 0 0.4em; font-size: 0.9em; }
 .chips { display: flex; flex-wrap: wrap; gap: 0.3em; margin: 0.2em 0 0.5em; }
-.chip { border: 1px solid var(--candle); color: var(--candle); padding: 0 0.4em; font-size: 0.85em; }
+.chip { border: 1px solid var(--candle); color: var(--candle); padding: 0 0.4em; font-size: 0.85em; text-transform: capitalize; }
 .cc dl { margin: 0 0 0.7em; }
 .cc dt { font-family: var(--f-display); font-size: 0.42em; color: var(--dim); margin-top: 0.6em; }
 .cc dd { margin: 0.1em 0 0; }
@@ -209,7 +209,7 @@ ul.pick { list-style: none; padding: 0; margin: 0 0 0.6em; display: grid; gap: 0
 .meeting-foot { display: flex; justify-content: space-between; align-items: center; gap: 0.5em; position: sticky; bottom: -0.8em; background: var(--panel-solid); padding: 0.4em 0; }
 
 .end-panel { width: min(96%, 42em); max-height: 96%; }
-.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.4em; margin: 0.4em 0; }
+.stats { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.4em; margin: 0.4em 0; }
 .stats div { border: 1px solid var(--line); padding: 0.2em 0.4em; display: flex; flex-direction: column; }
 .stats b { font-family: var(--f-display); font-size: 0.6em; color: var(--candle); line-height: 1.8; font-variant-numeric: tabular-nums; }
 .stats span { font-size: 0.8em; color: var(--dim); }
@@ -234,3 +234,4 @@ table.rhet tr + tr { border-top: 1px solid var(--line); }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+
