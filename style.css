@@ -1,3 +1,6 @@
+/* hidden must always win over display:flex on overlays */
+[hidden] { display: none !important; }
+
 /* Crucified: one dark look on purpose (candlelight on a night town). */
 :root {
   --night: #0d0b13;
