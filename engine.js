@@ -370,9 +370,17 @@
 
   function render(t) {
     ctx.filter = 'none'; ctx.globalAlpha = 1;
+    // Photo backgrounds sit in a full-resolution <img> behind the canvas, so they keep their own detail and colors.
     const bgImg = IMG['bg_' + view.bg];
-    if (bgImg) ctx.drawImage(bgImg, 0, 0, W, H);
-    else (BG[view.bg] || BG.town_day)(t);
+    const bgEl = $('bgimg');
+    if (bgImg && bgEl) {
+      if (bgEl.dataset.k !== view.bg) { bgEl.src = bgImg.src; bgEl.dataset.k = view.bg; }
+      bgEl.hidden = false;
+      ctx.clearRect(0, 0, W, H);
+    } else {
+      if (bgEl) bgEl.hidden = true;
+      if (bgImg) ctx.drawImage(bgImg, 0, 0, W, H); else (BG[view.bg] || BG.town_day)(t);
+    }
 
     const n = view.show.length;
     const xs = n === 1 ? [160] : n === 2 ? [100, 220] : [70, 160, 250];
